@@ -1,0 +1,90 @@
+
+import RPi.GPIO as GPIO
+import time
+
+
+
+
+GPIO.setmode(GPIO.BCM)
+ 
+
+GPIO_T = 14
+GPIO_E = 15
+BP = 18
+ 
+
+GPIO.setup(GPIO_T, GPIO.OUT)
+GPIO.setup(GPIO_E, GPIO.IN)
+GPIO.setup(BP, GPIO.OUT)
+
+
+
+GPIO.output(BP, True)
+buzzer = GPIO.PWM(BP, 0.25)
+buzzer.start(1)
+print("PWM PWM PWM")
+
+
+def setfrequency(dist):
+    if dist < 50 and dist > 40:
+        return 2
+    if dist < 40 and dist > 30:
+        return 3
+    if dist < 30 and dist > 20:
+        return 4
+    if dist < 20 and dist > 10:
+        return 5
+    if dist < 10:
+        return 6
+    if dist > 50:
+        return 1
+    else:
+        return 0.50
+ 
+
+ 
+def Dist():
+    print("Dist Dist Dist")
+    
+    GPIO.output(GPIO_T, True)
+ 
+    time.sleep(0.00001)
+    GPIO.output(GPIO_T, False)
+ 
+    Tstart = time.time()
+    Tstop = time.time()
+ 
+    
+    while GPIO.input(GPIO_E) == 0:
+        Tstart = time.time()
+ 
+    
+    while GPIO.input(GPIO_ECHO) == 1:
+        Tstop = time.time()
+ 
+    
+    TE = Tstop - Tstart
+   
+    Dist = (TimeElapsed * 34300) / 2
+    print("Done! DONE! DONE!")
+    return Dist
+
+
+ 
+if __name__ == '__main__':
+    print("---RUN RUN RUN---")
+    try:
+        while True:
+            dist = Dist()
+            print ("Dist = %.1f cm" % dist)
+            freq = SF(dist)
+            buzzer.ChangeFrequency(freq)
+            time.sleep(1)
+            
+                
+ 
+        
+    except KeyboardInterrupt:
+        print("STOP!")
+        GPIO.cleanup()
+        buzzer.stop()
